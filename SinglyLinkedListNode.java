@@ -8,7 +8,7 @@ public class SinglyLinkedListNode<V>
         this(null, null);   //constructor call for a node with no arguments
     }
 
-    public SinglyLinkedListNode(V data, SinglyLinkedListNode<V> next) //constructor call for a node with no arguments
+    public SinglyLinkedListNode(V data, SinglyLinkedListNode<V> next) //constructor call for a node with arguments
     {
         this.data = data;
         this.next = next;

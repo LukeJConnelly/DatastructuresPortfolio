@@ -1,44 +1,43 @@
-import java.util.LinkedList;
-
-public class SinglyLinkedList<V> {
+public class CircularlyLinkedList<C> {
     // Instance Variables
-    private SinglyLinkedListNode<V> head, tail;
+    private CircularlyLinkedNode<C> head, tail;
     private int size;
     //constructor takes no arguments
-    public SinglyLinkedList()
+    public void CircularlyLinkedNode()
     {
         head = null;
         tail = null;
         size = 0;
     }
 
-    public void addFirst(V v)
+    public void addFirst(C c)
     {
-        SinglyLinkedListNode SinglyLinkedListNode = new SinglyLinkedListNode(v, null);
+        CircularlyLinkedNode CircularlyLinkedNode = new CircularlyLinkedNode(c, null);
         if (tail == null)   // if this is the very first node added it also has to become the tail
         {
-            tail = SinglyLinkedListNode;
+            tail = CircularlyLinkedNode;
         }
-        SinglyLinkedListNode.setNext(head); // set next to be the current head
-        head = SinglyLinkedListNode; // make head the node we were passed
+        CircularlyLinkedNode.setNext(head); // set next to be the current head
+        tail.setNext(CircularlyLinkedNode);
+        head = CircularlyLinkedNode; // make head the node we were passed
         size++; // size increases by one
     }
 
-    public void addLast(V v)
+    public void addLast(C c)
     {
-        SinglyLinkedListNode SinglyLinkedListNode = new SinglyLinkedListNode(v, null);
-        SinglyLinkedListNode.setNext(null); //last node points to nothing
-        tail.setNext(SinglyLinkedListNode); // give current tail a next
-        tail = SinglyLinkedListNode;    // new tail is the node we were passed
+        CircularlyLinkedNode CircularlyLinkedNode = new CircularlyLinkedNode(c, null);
+        CircularlyLinkedNode.setNext(head); //last node points to nothing
+        tail.setNext(CircularlyLinkedNode); // give current tail a next
+        tail = CircularlyLinkedNode;    // new tail is the node we were passed
         size++; // size increases by one
     }
 
-    public V first()
+    public C first()
     {
         return head.getData();
     }
 
-    public SinglyLinkedListNode<V> getLast()
+    public CircularlyLinkedNode<C> getLast()
     {
         return tail;
     }
@@ -48,20 +47,26 @@ public class SinglyLinkedList<V> {
         return size==0;
     }
 
-    public V last()
+    public C last()
     {
         return tail.getData();
     }
 
-    public V removeFirst()
+    public C removeFirst()
     {
-        if (head == null)       //list has no head -> is empty
+        if (isEmpty())  //cant remove first
         {
             System.out.println("List is already empty!");
             return null;
         }
-        SinglyLinkedListNode<V> temp = head;   //save current head
+        CircularlyLinkedNode<C> temp = head;   //save current head
+        if (head == tail)
+        {
+            head=null;
+            tail=null;
+        }
         head = head.getNext();      // head becomes 2nd in the list
+        tail.setNext(head);
         temp.setNext(null);
         size--; //reduce size by one
         return temp.getData();    //return what was the head of the list
@@ -74,13 +79,13 @@ public class SinglyLinkedList<V> {
 
     public String toString()
     {
-        String s = "Singly Linked List contains: ";
-        if (head == null)       //list has no head -> is empty
+        String s = "Circularly Linked List contains: ";
+        if (isEmpty())       // size=0
         {
             s+=("Nothing!");
             return s;
         }
-        SinglyLinkedListNode<V> curr = head;
+        CircularlyLinkedNode<C> curr = head;
         for (int i=0; i<size; i++)
         {
             s+=curr.getData().toString()+" ";
@@ -89,14 +94,14 @@ public class SinglyLinkedList<V> {
         return s;
     }
 
-    public V get(int n)
+    public C get(int n)
     {
-        if (head == null)       //list has no head -> is empty
+        if (isEmpty())       //cant get from empty list
         {
             System.out.println("List is empty!");
             return null;
         }
-        SinglyLinkedListNode<V> curr = head;
+        CircularlyLinkedNode<C> curr = head;
         for (int i=0; i<n; i++)
         {
             curr=curr.getNext();
@@ -104,11 +109,11 @@ public class SinglyLinkedList<V> {
         return curr.getData();
     }
 
-    public V removeLast()
+    public C removeLast()
     {
-        SinglyLinkedListNode<V> nodeBefore;
-        SinglyLinkedListNode<V> nodeToRemove;
-        if (size == 0) // list is empty
+        CircularlyLinkedNode<C> nodeBefore;
+        CircularlyLinkedNode<C> nodeToRemove;
+        if (isEmpty()) // list is empty, cant remove last
         {
             System.out.println("List is already empty!");
             return null;
@@ -119,31 +124,26 @@ public class SinglyLinkedList<V> {
             nodeBefore = nodeBefore.getNext();
         }
         nodeToRemove = tail;
-        nodeBefore.setNext(null);   //second last node now points to null
+        if (head == tail)
+        {
+            head=null;
+            tail=null;
+        }
+        nodeBefore.setNext(head);   //second last node now points to null
         tail = nodeBefore;  //tail is set to be second last node
         size--; //size reduced by 1
         return nodeToRemove.getData();    //return the original tail
     }
 
-    public V remove(int index)    //precondition: index must be greater than 0 (use removeFirst otherwise)
+    public C remove(int index)    //precondition: index must be greater than 0 (use removeFirst otherwise)
     {
-        if (index == 0) //just use removeFirst
+        if (index == 0||index<0||index>size-1) //just use removeFirst
         {
-            System.out.println("Use removeFirst please, I'm a struggling CompSci student and you're making this unnecessarily hard!");
+            System.out.println("Use removeFirst, removeLast, or your index is out of bounds!");
             return null;
         }
-        if (index > size-1) // index out of bounds
-        {
-            System.out.println("Index is out of bounds!");
-            return null;
-        }
-        SinglyLinkedListNode<V> nodeBefore;
-        SinglyLinkedListNode<V> nodeToRemove;
-        if (size == 0) // list is empty
-        {
-            System.out.println("List is already empty!");
-            return null;
-        }
+        CircularlyLinkedNode<C> nodeBefore;
+        CircularlyLinkedNode<C> nodeToRemove;
         nodeBefore = head;
         for (int i=0; i<index-1; i++) //loop through to find node before the index
         {
@@ -155,9 +155,9 @@ public class SinglyLinkedList<V> {
         return nodeToRemove.getData();    //return the removed node
     }
 
-    public void add(int index, V v)    //precondition: index must be greater than 0 (use addFirst otherwise)
+    public void add(int index, C c)    //precondition: index must be greater than 0 (use addFirst otherwise)
     {
-        SinglyLinkedListNode nodeToAdd = new SinglyLinkedListNode(v, null);
+        CircularlyLinkedNode nodeToAdd = new CircularlyLinkedNode(c, null);
         if (index == 0) // use addFirst in this case
         {
             System.out.println("Index is 0, you can use addFirst!");
@@ -168,7 +168,7 @@ public class SinglyLinkedList<V> {
             System.out.println("Index is size or greater, you can use addLast or change your index respectively!");
             return;
         }
-        SinglyLinkedListNode<V> nodeBefore;
+        CircularlyLinkedNode<C> nodeBefore;
         if (size == 0) // list is empty
         {
             System.out.println("List is empty, you can use addFirst!");
@@ -186,7 +186,7 @@ public class SinglyLinkedList<V> {
 
     public static void main (String[] args)
     {
-        SinglyLinkedList<Integer> ll = new SinglyLinkedList<Integer>();
+        CircularlyLinkedList<Integer> ll = new CircularlyLinkedList<Integer>();
         System.out.println(ll.toString());
         ll.addFirst(0);
         ll.addFirst(1);
