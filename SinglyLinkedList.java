@@ -26,6 +26,11 @@ public class SinglyLinkedList<V> {
 
     public void addLast(V v)
     {
+        if(isEmpty())
+        {
+            addFirst(v);
+            return;
+        }
         SinglyLinkedListNode SinglyLinkedListNode = new SinglyLinkedListNode(v, null);
         SinglyLinkedListNode.setNext(null); //last node points to nothing
         tail.setNext(SinglyLinkedListNode); // give current tail a next
@@ -129,7 +134,7 @@ public class SinglyLinkedList<V> {
     {
         if (index == 0) //just use removeFirst
         {
-            System.out.println("Use removeFirst please, I'm a struggling CompSci student and you're making this unnecessarily hard!");
+            removeFirst();
             return null;
         }
         if (index > size-1) // index out of bounds
@@ -155,25 +160,24 @@ public class SinglyLinkedList<V> {
         return nodeToRemove.getData();    //return the removed node
     }
 
-    public void add(int index, V v)    //precondition: index must be greater than 0 (use addFirst otherwise)
+    public void add(int index, V v)
     {
         SinglyLinkedListNode nodeToAdd = new SinglyLinkedListNode(v, null);
         if (index == 0) // use addFirst in this case
         {
-            System.out.println("Index is 0, you can use addFirst!");
+            addFirst(v);
             return;
         }
-        if (index >= size-1) // use addLast in this case or index out of bounds
+        if (index >= size) // use addLast in this case or index out of bounds
         {
-            System.out.println("Index is size or greater, you can use addLast or change your index respectively!");
+            System.out.println("Index out of bounds");
             return;
+        }
+        if(index == size-1)
+        {
+            addLast(v);
         }
         SinglyLinkedListNode<V> nodeBefore;
-        if (size == 0) // list is empty
-        {
-            System.out.println("List is empty, you can use addFirst!");
-            return;
-        }
         nodeBefore = head;
         for (int i=0; i<index-1; i++) //loop through to find node before the index
         {

@@ -135,11 +135,19 @@ public class CircularlyLinkedList<C> {
         return nodeToRemove.getData();    //return the original tail
     }
 
-    public C remove(int index)    //precondition: index must be greater than 0 (use removeFirst otherwise)
+    public C remove(int index)
     {
-        if (index == 0||index<0||index>size-1) //just use removeFirst
+        if(index == 0)
         {
-            System.out.println("Use removeFirst, removeLast, or your index is out of bounds!");
+            return removeFirst();
+        }
+        if(index == size-1)
+        {
+            return removeLast();
+        }
+        if(index <0||index>=size)
+        {
+            System.out.println("Index is out of bounds");
             return null;
         }
         CircularlyLinkedNode<C> nodeBefore;
@@ -160,20 +168,20 @@ public class CircularlyLinkedList<C> {
         CircularlyLinkedNode nodeToAdd = new CircularlyLinkedNode(c, null);
         if (index == 0) // use addFirst in this case
         {
-            System.out.println("Index is 0, you can use addFirst!");
+            addFirst(c);
             return;
         }
-        if (index >= size-1) // use addLast in this case or index out of bounds
+        if (index >= size || index<0) // use addLast in this case or index out of bounds
         {
-            System.out.println("Index is size or greater, you can use addLast or change your index respectively!");
+            System.out.println("Index is out of bounds");
+            return;
+        }
+        if(index==size-1)
+        {
+            addLast(c);
             return;
         }
         CircularlyLinkedNode<C> nodeBefore;
-        if (size == 0) // list is empty
-        {
-            System.out.println("List is empty, you can use addFirst!");
-            return;
-        }
         nodeBefore = head;
         for (int i=0; i<index-1; i++) //loop through to find node before the index
         {

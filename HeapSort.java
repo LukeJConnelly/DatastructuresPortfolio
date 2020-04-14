@@ -6,7 +6,7 @@ public class HeapSort {
     public static void main(String[] args) {
         int n = 0;
         while (n < 5000) {
-            LinkedList<Integer> myList = new LinkedList<Integer>();
+            SinglyLinkedList<Integer> myList = new SinglyLinkedList<Integer>();
             fillRandom(myList, n);
 //            System.out.println(myList.toString());
             long startTime = System.nanoTime();
@@ -18,8 +18,8 @@ public class HeapSort {
             {
                 // move first element to end
                 int temp = myList.get(0);
-                myList.set(0, myList.get(i));
-                myList.set(i, temp);
+                myList.add(0, myList.get(i));
+                myList.add(i, temp);
 
                 // recursively call to heap sort reduced list
                 HeapSortRecursively(myList, i, 0);
@@ -31,16 +31,16 @@ public class HeapSort {
             n+=100;
         }
     }
-    public static void fillRandom(LinkedList list, int n)
+    public static void fillRandom(SinglyLinkedList<Integer> list, int n)
     {
         Random rnd = new Random();
         for (int i=0; i<n; i++)
         {
-            list.add(rnd.nextInt()%10000);
+            list.addFirst(rnd.nextInt()%10000);
         }
     }
 
-    public static void HeapSortRecursively(LinkedList<Integer> myList, int n, int i)
+    public static void HeapSortRecursively(SinglyLinkedList<Integer> myList, int n, int i)
     {
         int largest = i;
         int l = 2*i + 1;  // left
@@ -54,8 +54,8 @@ public class HeapSort {
         if (largest != i)
         {
             int swap = myList.get(i);
-            myList.set(i, myList.get(largest));
-            myList.set(largest, swap);
+            myList.add(i, myList.get(largest));
+            myList.add(largest, swap);
             // Recursively heapsort the sub tree
             HeapSortRecursively(myList, n, largest);
         }
