@@ -1,7 +1,7 @@
 /**
  * Concrete implementation of a binary tree using a node-based, linked structure.
  */
-public class LinkedBinaryTree<E extends Comparable<E>> extends AbstractBinaryTree<E> {
+public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
 
 
     /** Nested static class for a binary tree node. */
@@ -19,10 +19,7 @@ public class LinkedBinaryTree<E extends Comparable<E>> extends AbstractBinaryTre
         }
 
         public E getElement() throws IllegalStateException {
-            if (element == null)
-                throw new IllegalStateException();
-            else
-                return this.element;
+            return this.element;
         }
 
         public Node<E> getParent() {
@@ -54,7 +51,8 @@ public class LinkedBinaryTree<E extends Comparable<E>> extends AbstractBinaryTre
         }
 
         public String toString(){
-            return "( "+element.toString()+" )";
+            if(element == null){ return "null";}
+            return element.toString();
         }
     }
 
@@ -272,17 +270,30 @@ public class LinkedBinaryTree<E extends Comparable<E>> extends AbstractBinaryTre
      * @throws IllegalArgumentException if p has two children.
      */
     public E remove(Position<E> p) throws IllegalArgumentException {
-        if (root == null)
-            return null;
-        if (root == p) {
-            E element = root.getElement();
-            root=null;
-            return element;
+        Node<E> n = (Node<E>) p;
+        if (numChildren(n) == 2) {
+            throw new IllegalArgumentException("Node has two children");
         }
-        if (root.getLeft() == null && root.getRight() == null) {
-            return null;
+        Node<E> child = n.getLeft() != null ? n.getLeft() : n.getRight();
+        if(child!=null){
+            child.setParent(n.getParent());
         }
-        return null;
+        if(n==root)
+        {
+            root = child;
+        }
+        else{
+            Node<E> parent = n.getParent();
+            if(n == parent.getLeft()){
+                parent.setLeft(child);
+            }
+            else{
+                parent.setRight(child);
+            }
+        }
+        size--;
+        E old = n.getElement();
+        return old;
     }
 
     public String toString() {
