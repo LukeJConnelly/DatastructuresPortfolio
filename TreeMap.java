@@ -397,21 +397,5 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
     }
 
     public static void main(String[] args) {
-        TreeMap<Integer, Integer> treeMap = new TreeMap<Integer, Integer>();
-        Random rnd = new Random();
-        int n = 16;
-        java.util.List<Integer> rands = rnd.ints(1, 1000).limit(n).distinct().boxed().collect(Collectors.toList());
-
-        for(Integer i : rands) {
-            treeMap.put(i, i);
-        }
-        BinaryTreePrinter<Entry<Integer, Integer>> printer = new BinaryTreePrinter<>(treeMap.tree);
-        System.out.println(printer.print());
-        System.out.println("tree entries: " + treeMap.entrySet());
-
-        treeMap.remove(rands.get(1));
-        System.out.println(printer.print());
-
-        System.out.println("tree entries after removal: " + treeMap.entrySet());
     }
 }
