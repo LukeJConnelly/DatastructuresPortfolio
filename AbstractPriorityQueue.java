@@ -34,6 +34,11 @@ public abstract class AbstractPriorityQueue<K,V> implements PriorityQueue<K,V> {
         // utilities not exposed as part of the Entry interface
         protected void setKey(K key) { k = key; }
         protected void setValue(V value) { v = value; }
+
+        public String toString()
+        {
+            return this.getValue().toString();
+        }
     } //----------- end of nested PQEntry class -----------
 
     // instance variable for an AbstractPriorityQueue

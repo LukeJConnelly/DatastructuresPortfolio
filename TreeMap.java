@@ -20,6 +20,10 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
         tree.addRoot(null); // create a sentinel leaf as root
     }
 
+    public TreeMap(Comparator<K> comp) {
+        super(comp);
+    }
+
     /**
      * Returns the number of entries in the map.
      *
@@ -141,7 +145,7 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
      */
     @Override
     public V get(K key) throws IllegalArgumentException {
-        return treeSearch(root(), key).getElement().getValue();
+        return isExternal(treeSearch(root(), key))? null : treeSearch(root(), key).getElement().getValue();
     }
 
     /**
@@ -229,9 +233,30 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
      */
     @Override
     public Entry<K, V> ceilingEntry(K key) throws IllegalArgumentException {
-        // TODO
-        return null;
+        if (root() == null) {
+            return null;
+        }
+        return ceilingEntryHelper(key, root());
     }
+    public Entry<K, V> ceilingEntryHelper(K key, Position<Entry<K, V>> p) throws IllegalArgumentException {
+        if(p==null){return null;}
+        if (p.getElement() == null) {
+            return null;
+        }
+        if (p.getElement().getKey() == key) {
+            return p.getElement();
+        }
+        if (compare(p.getElement(), key)<0) {
+            return ceilingEntryHelper(key, right(p));
+        }
+        Entry<K,V> ceiling = ceilingEntryHelper(key, left(p));
+        if(ceiling==null)
+        {
+            return p.getElement();
+        }
+        return (compare(ceiling, key)>=0) ? ceiling : p.getElement();
+    }
+
 
     /**
      * Returns the entry with greatest key less than or equal to given key (or null
@@ -243,8 +268,28 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
      */
     @Override
     public Entry<K, V> floorEntry(K key) throws IllegalArgumentException {
-        // TODO
-        return null;
+        if (root() == null) {
+            return null;
+        }
+        return floorEntryHelper(key, root());
+    }
+    public Entry<K, V> floorEntryHelper(K key, Position<Entry<K, V>> p) throws IllegalArgumentException {
+        if(p==null){return null;}
+        if (p.getElement() == null) {
+            return null;
+        }
+        if (p.getElement().getKey() == key) {
+            return p.getElement();
+        }
+        if (compare(p.getElement(), key)>0) {
+            return floorEntryHelper(key, left(p));
+        }
+        Entry<K,V> floor = floorEntryHelper(key, right(p));
+        if(floor==null)
+        {
+            return p.getElement();
+        }
+        return (compare(floor, key)<=0) ? floor : p.getElement();
     }
 
     /**
@@ -257,7 +302,16 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
      */
     @Override
     public Entry<K, V> lowerEntry(K key) throws IllegalArgumentException {
-        // TODO
+        Position<Entry<K,V>> p = treeSearch(root(), key);
+        if (isInternal(p) && isInternal(left(p))) {
+            return treeMax(left(p)).getElement();
+        }
+        while (!isRoot(p)) {
+            if (p == right(parent(p)))
+                return parent(p).getElement();
+            else
+                p = parent(p);
+        }
         return null;
     }
 
@@ -271,7 +325,15 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
      */
     @Override
     public Entry<K, V> higherEntry(K key) throws IllegalArgumentException {
-        // TODO
+        Position<Entry<K,V>> p = treeSearch(root(), key);
+        if (isInternal(p) && isInternal(right(p)))
+            return treeMin(right(p)).getElement();
+        while (!isRoot(p)) {
+            if (p == left(parent(p)))
+                return parent(p).getElement();
+            else
+                p = parent(p);
+        }
         return null;
     }
 
@@ -307,7 +369,7 @@ public class TreeMap<K, V> extends AbstractSortedMap<K, V> {
     @Override
     public Iterable<Entry<K, V>> subMap(K fromKey, K toKey) throws IllegalArgumentException {
         ArrayList<Entry<K, V>> submap = new ArrayList<>();
-        if(compare(fromKey, toKey)<0){throw new IllegalArgumentException("toKey is less than fromKey");}
+        if(compare(fromKey, toKey)>0){throw new IllegalArgumentException("toKey is less than fromKey");}
         for(Position<Entry<K, V>> p : tree.inorder()){
             if(isInternal(p)&&compare(p.getElement().getKey(), fromKey)>=0&&compare(p.getElement().getKey(), toKey)<=0) {
                 submap.add(p.getElement());

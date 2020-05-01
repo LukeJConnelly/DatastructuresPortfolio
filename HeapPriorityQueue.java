@@ -34,11 +34,11 @@ public class HeapPriorityQueue<K,V> extends AbstractPriorityQueue<K,V> {
 
     ArrayList<Entry<K,V>> heap = new ArrayList<>();
     // protected utilities
-    protected int parent(int j){return j/2;}
-    protected int left(int j) {return 2*j;}
-    protected int right(int j) {return (2*j)+1;}
-    protected boolean hasLeft(int j){return heap.get(2*j)==null;}
-    protected boolean hasRight(int j){return heap.get((2*j)+1)==null;}
+    protected int parent(int j){return (j-1)/2;}
+    protected int left(int j) {return 2*j+1;}
+    protected int right(int j) {return (2*j)+2;}
+    protected boolean hasLeft(int j){return left(j) < heap.size();}
+    protected boolean hasRight(int j){return right(j) < heap.size();}
 
     /** Exchanges the entries at indices i and j of the array list. */
     protected void swap(int i, int j) {
@@ -130,6 +130,11 @@ public class HeapPriorityQueue<K,V> extends AbstractPriorityQueue<K,V> {
         heap.remove(heap.size() - 1);
         downheap(0);
         return answer;
+    }
+
+    @Override
+    public String toString(){
+        return heap.toString();
     }
 
     /** Used for debugging purposes only */

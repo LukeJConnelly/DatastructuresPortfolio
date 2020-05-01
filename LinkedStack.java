@@ -53,19 +53,20 @@ public class LinkedStack<V> {
 
     public String toString()
     {
-        String s = "Linked Stack contains: ";
+        String s = "[";
         if (head == null)       //list has no head -> is empty
         {
-            s+=("Nothing!");
-            return s;
+            s+=("");
+            return s+"]";
         }
         SinglyLinkedListNode<V> curr = head;
-        for (int i=0; i<size; i++)
+        for (int i=0; i<size-1; i++)
         {
-            s+=curr.getData().toString()+" ";
+            s+=curr.getData().toString()+", ";
             curr=curr.getNext();
         }
-        return s;
+        s+=curr.getData().toString();
+        return s+"]";
     }
 
     public static void main (String[] args) {

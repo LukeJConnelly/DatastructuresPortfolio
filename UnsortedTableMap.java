@@ -48,13 +48,11 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public V get(K key) {
-        EntryIterator EI = new EntryIterator();
-        while(EI.hasNext())
+        for (int i=0; i<table.size();i++)
         {
-            Entry<K,V> curr = EI.next();
-            if(curr.getKey()==key)
+            if(key.toString().compareTo(table.get(i).getKey().toString())==0)
             {
-                return curr.getValue();
+                return table.get(i).getValue();
             }
         }
         return null;
@@ -97,15 +95,13 @@ public class UnsortedTableMap<K, V> extends AbstractMap<K, V> {
      */
     @Override
     public V remove(K key) {
-        EntryIterator EI = new EntryIterator();
-        while(EI.hasNext())
+        for (int i=0; i<table.size();i++)
         {
-            Entry<K,V> curr = EI.next();
-            if(curr.getKey()==key)
+            if(key.toString().compareTo(table.get(i).getKey().toString())==0)       //strings are bad keys, so i had to do this to pass tests
             {
-                V oldValue = curr.getValue();
-                EI.remove();
-                return oldValue;
+                V curr = table.get(i).getValue();
+                table.remove(i);
+                return curr;
             }
         }
         return null;

@@ -23,7 +23,7 @@ public class LinkedQueue<E> {
             size++;
         }
 
-        public E front()
+        public E first()
         {
             return header.getNext().getData();
         }
@@ -50,19 +50,20 @@ public class LinkedQueue<E> {
 
         public String toString()
         {
-            String s = "Linked Queue contains: ";
+            String s = "[";
             if (isEmpty())       //list is empty cant print string
             {
-                s+=("Nothing!");
+                s+=("]");
                 return s;
             }
             DLLNode<E> curr = header.getNext();
-            for (int i=0; i<size; i++)
+            for (int i=0; i<size-1; i++)
             {
-                s+=curr.toString()+" ";
+                s+=curr.toString()+", ";
                 curr=curr.getNext();
             }
-            return s;
+            s+=curr.toString();
+            return s+"]";
         }
 
         private E remove(DLLNode<E> node)

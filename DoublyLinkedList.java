@@ -1,4 +1,7 @@
-public class DoublyLinkedList<E> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class DoublyLinkedList<E> implements Iterable<E>{
     // Instance Variables
     private DLLNode<E> header, trailer;
     private int size;
@@ -6,7 +9,7 @@ public class DoublyLinkedList<E> {
     public DoublyLinkedList()
     {
         header = new DLLNode(null, null, null);
-        trailer = new DLLNode(null, header, null);
+        trailer = new DLLNode(null, null, header);
         header.setNext(trailer);
         size = 0;
     }
@@ -65,22 +68,23 @@ public class DoublyLinkedList<E> {
 
     public String toString()
     {
-        String s = "Doubly Linked List contains: ";
+        String s = "[";
         if (isEmpty())       //list is empty cant print string
         {
-            s+=("Nothing!");
-            return s;
+            s+=("");
+            return s+"]";
         }
         DLLNode<E> curr = header.getNext();
-        for (int i=0; i<size; i++)
+        for (int i=0; i<size-1; i++)
         {
-            s+=curr.toString()+" ";
+            s+=curr.toString()+", ";
             curr=curr.getNext();
         }
-        return s;
+        s+=curr.toString();
+        return s+"]";
     }
 
-    public DLLNode<E> get(int n)
+    public E get(int n)
     {
         if (isEmpty())       //is empty has no indexes
         {
@@ -92,7 +96,7 @@ public class DoublyLinkedList<E> {
         {
             curr=curr.getNext();
         }
-        return curr;
+        return curr.getData();
     }
 
     public E removeLast()
@@ -124,16 +128,16 @@ public class DoublyLinkedList<E> {
         }
         DLLNode<E> nodeBefore;
         nodeBefore = header.getNext();
-        for (int i=0; i<index; i++) //loop through to find node before the index
+        for (int i=0; i<index-1; i++) //loop through to find node before the index
         {
             nodeBefore = nodeBefore.getNext();
         }
         addBetween(toAdd, nodeBefore, nodeBefore.getNext());
     }
 
-    public E removeByIndex(int index)    //precondition: index must be greater than 0 (use addFirst otherwise)
+    public E remove(int index)
     {
-        if (index<0||index>=size) // use addFirst in this case
+        if (index<0||index>=size)
         {
             System.out.println("Index is out of bounds");
             return null;
@@ -145,6 +149,22 @@ public class DoublyLinkedList<E> {
             nodeBefore = nodeBefore.getNext();
         }
         return remove(nodeBefore.getNext());
+    }
+
+    public Iterator<E> iterator(){ return new DoublyLinkedListIterator(header.getNext());}
+
+    public class DoublyLinkedListIterator implements Iterator<E> {
+        private DLLNode current;
+        public DoublyLinkedListIterator(DLLNode e){this.current=e;}
+        public boolean hasNext() {
+            return current.getNext() != null;
+        }
+        public E next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            E tmp = (E) current.getData();
+            current = current.getNext();
+            return tmp;
+        }
     }
 
     public static void main (String[] args)
@@ -165,7 +185,6 @@ public class DoublyLinkedList<E> {
         ll.removeLast();
         System.out.println(ll.toString());
         //Removes the item in the specified index
-        ll.removeByIndex(2);
         System.out.println(ll.toString());
         ll.removeFirst();
         System.out.println(ll.toString());

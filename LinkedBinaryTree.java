@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Concrete implementation of a binary tree using a node-based, linked structure.
  */
@@ -297,14 +299,31 @@ public class LinkedBinaryTree<E> extends AbstractBinaryTree<E> {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for(Position<E> p : positions()) {
-            sb.append(p.getElement());
-            sb.append(", ");
+        List<Position<E>> ptemp = (List<Position<E>>) positions();
+        ArrayList<Position<E>> p = new ArrayList<>();
+        if(ptemp.isEmpty()){return "[]";}
+        for(int i=0; i<ptemp.size();i++)
+        {
+            if(ptemp.get(i).getElement()!=null) {
+               p.add(ptemp.get(i));
+            }
         }
-        sb.append("]");
-        return sb.toString();
+        return p.toString();
+    }
+
+    public void createLevelOrder(E[] a){
+        root = createLevelOrderHelper(a, root, 0);
+    }
+
+    private Node<E> createLevelOrderHelper(E[] a, Node<E> p, int i){
+        if(i < a.length) {
+            Node<E> n = new Node<>(a[i], p, null, null);
+            n.left = createLevelOrderHelper(a, n.left, 2 * i + 1);
+            n.right = createLevelOrderHelper(a, n.right, 2 * i + 2);
+            ++size;
+            return n;
+        }
+        return p;
     }
 
     public static void main(String [] args) {

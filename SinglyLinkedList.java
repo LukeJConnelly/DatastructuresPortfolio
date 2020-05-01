@@ -1,6 +1,8 @@
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
-public class SinglyLinkedList<V> {
+public class SinglyLinkedList<V> implements Iterable<V> {
     // Instance Variables
     private SinglyLinkedListNode<V> head, tail;
     private int size;
@@ -40,6 +42,10 @@ public class SinglyLinkedList<V> {
 
     public V first()
     {
+        if(head==null)
+        {
+            return null;
+        }
         return head.getData();
     }
 
@@ -79,19 +85,20 @@ public class SinglyLinkedList<V> {
 
     public String toString()
     {
-        String s = "Singly Linked List contains: ";
+        String s = "[";
         if (head == null)       //list has no head -> is empty
         {
-            s+=("Nothing!");
-            return s;
+            s+=("");
+            return s+"]";
         }
         SinglyLinkedListNode<V> curr = head;
-        for (int i=0; i<size; i++)
+        for (int i=0; i<size-1; i++)
         {
-            s+=curr.getData().toString()+" ";
+            s+=curr.getData().toString()+", ";
             curr=curr.getNext();
         }
-        return s;
+        s+=curr.getData().toString();
+        return s+"]";
     }
 
     public V get(int n)
@@ -186,6 +193,22 @@ public class SinglyLinkedList<V> {
         nodeToAdd.setNext(nodeBefore.getNext());
         nodeBefore.setNext(nodeToAdd);
         size++; //size reduced by 1
+    }
+
+    public Iterator<V> iterator(){ return new SinglyLinkedListIterator(head);}
+
+    public class SinglyLinkedListIterator implements Iterator<V> {
+        private SinglyLinkedListNode current;
+        public SinglyLinkedListIterator(SinglyLinkedListNode e){this.current=e;}
+        public boolean hasNext() {
+            return current != null;
+        }
+        public V next() {
+            if (!hasNext()) throw new NoSuchElementException();
+            V tmp = (V) current.getData();
+            current = current.getNext();
+            return tmp;
+        }
     }
 
     public static void main (String[] args)

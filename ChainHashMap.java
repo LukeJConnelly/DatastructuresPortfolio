@@ -45,6 +45,21 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
         return bucket == null ? null : bucket.get(k);
     }
 
+    @Override
+    public V get(K k)
+    {
+        for (int i=0; i<table.length; i++)
+        {
+            if(table[i]!=null)
+            {
+                if(bucketGet(i, k)!=null) {
+                    return bucketGet(i, k);
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Associates key k with value v in bucket with hash value h, returning the
      * previously associated value, if any.
@@ -87,6 +102,21 @@ public class ChainHashMap<K, V> extends AbstractHashMap<K, V> {
         V old = bucket.remove(k);
         n -= ( prev - bucket.size());
         return old;
+    }
+
+    public V remove(K k)
+    {
+        for (int i=0; i<table.length; i++)
+        {
+            if(table[i]!=null)
+            {
+                UnsortedTableMap<K, V>  bucket = table[i];
+                if(bucketGet(i, k)!=null) {
+                    return bucketRemove(i, k);
+                }
+            }
+        }
+        return null;
     }
 
     /**

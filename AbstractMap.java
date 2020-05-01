@@ -81,12 +81,33 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
         public void remove() {
             throw new UnsupportedOperationException("remove not supported");
         }
+
+        public String toString(){
+            String s="[";
+            if(!entries.hasNext())
+            {
+                return "[]";
+            }
+            while(entries.hasNext())
+            {
+                s+=entries.next().getValue().toString();
+                if(entries.hasNext())
+                {
+                    s+=", ";
+                }
+            }
+            return s+"]";
+        }
     } // ----------- end of nested KeyIterator class -----------
 
     // ---------------- nested KeyIterable class ----------------
     private class KeyIterable implements Iterable<K> {
         public Iterator<K> iterator() {
             return new KeyIterator();
+        }
+
+        public String toString(){
+            return new KeyIterator().toString();
         }
     } // ----------- end of nested KeyIterable class -----------
 
